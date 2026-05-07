@@ -1,5 +1,7 @@
 # iClaw - HarmonyOS 项目介绍文档
 
+[2026 HarmonyOS创新赛·极客赛道](https://developer.huawei.com/consumer/cn/activity/digixActivity/digixcmsdetail/101773710117484023)
+
 ## 项目基本信息
 
 | 项目 | 信息 |
@@ -32,7 +34,7 @@
 | 创新方向 | 使用能力 | 说明 |
 |---------|---------|------|
 | **全场景一体协同** | 互动卡片/服务卡片 Form Kit | 桌面 Widget 实时显示网关状态，支持手动刷新、定时刷新（30分钟）、网关状态变更自动刷新，跨进程数据同步，一键发送到桌面 |
-| **安全隐私保护** | 安全图库 Media Library Kit、AI 防窥保护 Device Security Kit| 图片安全选择、屏幕防窥检测、生物识别应用锁，三重安全防护体系 |
+| **安全隐私保护** | 安全图库 Media Library Kit、AI 防窥保护 Device Security Kit| 图片安全选择、屏幕防窥检测、 |
 | **AI 原生体验** | WebSocket 流式通信 + RPC 远程调用 | 实时 AI 对话、工具调用可视化、多模型切换、会话级模型配置、流式消息传输 |
 | **智能交互设计** | UIDesignKit + ArkUI 声明式 UI | HdsNavDestination 原生导航、Sheet 底部表单、上下文菜单、3D 模型展示 |
 | **数据可视化** | 自定义图表组件 | 用量统计面板，展示 Token 消耗、成本分析、热门模型/工具/供应商排行 |
@@ -389,16 +391,16 @@ iClaw/
 | AI 对话 | ![AI 对话](assets/screenshots/chat.jpg) |
 | 模型选择 | ![模型选择](assets/screenshots/chat-model-select.jpg) |
 | 会话管理 | ![会话管理](assets/screenshots/sessions.jpg) |
-| 用量统计 | ![用量统计](assets/screenshots/usage.jpg) |
-| 用量筛选 | ![用量筛选](assets/screenshots/usage-filter.jpg) |
-| 桌面 Widget | ![桌面 Widget](assets/screenshots/widget.jpg) |
-| 模型管理 | ![模型管理](assets/screenshots/models.jpg) |
+| 用量统计 | ![用量统计](assets/screenshots/model-usage.jpg) |
+| 桌面 Widget | ![桌面 Widget](assets/screenshots/form-cards-preview.jpg) |
+| 模型管理 | ![模型管理](assets/screenshots/model-list.jpg) |
 | 高级设置 | ![高级设置](assets/screenshots/settings.jpg) |
-| 网关连接 | ![网关连接](assets/screenshots/gateway-connect.jpg) |
-| 梦境模式 | ![梦境模式](assets/screenshots/dreaming.jpg) |
-| 防窥保护 | ![防窥保护](assets/screenshots/anti-peep.jpg) |
-| 应用锁 | ![应用锁](assets/screenshots/app-lock.jpg) |
-| 深色模式 | ![深色模式](assets/screenshots/dark-mode.jpg) |
+| 网关管理 | ![网关管理](assets/screenshots/gateway-manage.jpg) |
+| 频道管理 | ![频道管理](assets/screenshots/channel-list.jpg) |
+| 定时任务 | ![定时任务](assets/screenshots/cron-list.jpg) |
+| 梦境模式 | ![梦境模式](assets/screenshots/claw-dreaming.jpg) |
+| 网关发现 | ![网关发现](assets/screenshots/dicover-gateway.jpg) |
+| 连接帮助 | ![连接帮助](assets/screenshots/connect-help.jpg) |
 
 #### 2.6.2 Demo 演示
 
