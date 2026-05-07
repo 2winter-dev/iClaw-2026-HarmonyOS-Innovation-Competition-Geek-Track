@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iClaw - HarmonyOS 项目介绍</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-card: #ffffff;
+            --bg-hover: #f0f2f5;
+            --text-primary: #1f2328;
+            --text-secondary: #656d76;
+            --text-muted: #8c959f;
+            --accent-primary: #e8453c;
+            --accent-purple: #8b5cf6;
+            --accent-green: #2da44e;
+            --accent-orange: #d4841c;
+            --accent-red: #e8453c;
+            --accent-pink: #d63384;
+            --border-color: #d0d7de;
+            --border-light: #e8ecf0;
+            --gradient-1: linear-gradient(135deg, #e8453c 0%, #d63384 100%);
+            --gradient-2: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            --gradient-3: linear-gradient(135deg, #e8453c 0%, #d4841c 100%);
+            --gradient-hero: linear-gradient(180deg, rgba(232,69,60,0.08) 0%, transparent 100%);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Watermark */
+        body::before {
+            content: 'by winter';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 120px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.025);
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+            letter-spacing: 20px;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 50%;
+            left: 24px;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-logo {
+            font-size: 16px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+            padding: 8px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+            background: rgba(248,81,73,0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 24px 80px;
+            text-align: center;
+            background: var(--gradient-hero);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(248,81,73,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255, 88, 102, 0.1);
+            border: 1px solid rgba(255, 53, 114, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--accent-primary);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #f85149 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 48px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Placeholder */
+        .placeholder {
+            background: var(--bg-card);
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Section */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            margin-bottom: 48px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(139,92,246,0.1);
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 16px;
+            max-width: 600px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon.blue { background: rgba(232,69,60,0.1); }
+        .card-icon.purple { background: rgba(139,92,246,0.1); }
+        .card-icon.green { background: rgba(45,164,78,0.1); }
+        .card-icon.orange { background: rgba(212,132,28,0.1); }
+        .card-icon.red { background: rgba(232,69,60,0.1); }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .card-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(63,185,80,0.1);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--accent-green);
+            margin-top: 12px;
+        }
+
+        /* Feature List */
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .feature-check {
+            color: var(--accent-green);
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+        }
+
+        .feature-text strong {
+            color: var(--text-primary);
+        }
+
+        /* Comparison Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .check { color: var(--accent-green); }
+        .cross { color: var(--accent-red); }
+        .partial { color: var(--accent-orange); }
+
+        /* Architecture */
+        .architecture {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+
+        .arch-layer {
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .arch-layer.ui { background: rgba(232,69,60,0.06); border-color: rgba(232,69,60,0.2); }
+        .arch-layer.component { background: rgba(139,92,246,0.06); border-color: rgba(139,92,246,0.2); }
+        .arch-layer.service { background: rgba(45,164,78,0.06); border-color: rgba(45,164,78,0.2); }
+        .arch-layer.store { background: rgba(212,132,28,0.06); border-color: rgba(212,132,28,0.2); }
+        .arch-layer.util { background: rgba(232,69,60,0.06); border-color: rgba(232,69,60,0.2); }
+
+        /* Screenshots Grid */
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .screenshot-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .screenshot-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .screenshot-placeholder {
+            aspect-ratio: 9/16;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .screenshot-label {
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 48px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .hero-stats { flex-direction: column; gap: 24px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .nav { 
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                flex-direction: row;
+                border-radius: 12px;
+                margin: 16px auto;
+                width: fit-content;
+            }
+            .nav-links { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+            .nav-logo { border-bottom: none; margin-bottom: 0; border-right: 1px solid var(--border-color); }
+            .section { padding: 48px 0; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .badge-blue {
+            background: rgba(232,69,60,0.08);
+            color: var(--accent-primary);
+            border: 1px solid rgba(232,69,60,0.2);
+        }
+
+        .badge-purple {
+            background: rgba(139,92,246,0.08);
+            color: var(--accent-purple);
+            border: 1px solid rgba(139,92,246,0.2);
+        }
+
+        .badge-green {
+            background: rgba(45,164,78,0.08);
+            color: var(--accent-green);
+            border: 1px solid rgba(45,164,78,0.2);
+        }
+
+        /* Dreaming Section */
+        .dreaming-highlight {
+            background: linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(232,69,60,0.06) 100%);
+            border: 1px solid rgba(139,92,246,0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .dreaming-highlight h3 {
+            color: var(--accent-purple);
+            margin-bottom: 16px;
+        }
+
+        .phase-tags {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .phase-tag {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .phase-tag.light {
+            background: rgba(212,132,28,0.1);
+            color: var(--accent-orange);
+            border: 1px solid rgba(212,132,28,0.25);
+        }
+
+        .phase-tag.deep {
+            background: rgba(232,69,60,0.1);
+            color: var(--accent-primary);
+            border: 1px solid rgba(232,69,60,0.25);
+        }
+
+        .phase-tag.rem {
+            background: rgba(139,92,246,0.1);
+            color: var(--accent-purple);
+            border: 1px solid rgba(139,92,246,0.25);
+        }
+
+        /* Play Button */
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(232,69,60,0.1);
+            border: 1px solid rgba(232,69,60,0.25);
+            border-radius: 28px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+
+        .play-btn:hover {
+            background: rgba(232,69,60,0.18);
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
+        }
+
+        .play-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .play-icon::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 7px solid white;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            margin-left: 2px;
+        }
+
+        /* Video Modal */
+        .video-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .video-modal-overlay.active {
+            display: flex;
+        }
+
+        .video-modal-content {
+            position: relative;
+            max-height: 90vh;
+            cursor: default;
+        }
+
+        .video-modal-content video {
+            max-height: 90vh;
+            width: auto;
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+            display: block;
+        }
+
+        .video-modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .video-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Video Thumbnail */
+        .video-thumbnail {
+            max-width: 280px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .video-thumbnail:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-primary);
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            display: block;
+        }
+
+        .video-thumbnail-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(232, 69, 60, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(232, 69, 60, 0.4);
+        }
+
+        .video-thumbnail-play::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 14px solid white;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">iClaw</div>
+        <ul class="nav-links">
+            <li><a href="#features">功能特性</a></li>
+            <li><a href="#dreaming">梦境模式</a></li>
+            <li><a href="#architecture">技术架构</a></li>
+            <li><a href="#screenshots">应用截图</a></li>
+            <li><a href="#structure">项目结构</a></li>
+            <li><a href="#opensource">开源组件</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">2026 HarmonyOS 创新赛 · 极客赛道</div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 24px;">
+            <img src="assets/tab_chat.png" alt="iClaw Logo" style="width: 44px; height: 44px; border-radius: 46px; box-shadow: var(--shadow-md);">
+            <h1>iClaw</h1>
+            <img src="assets/ClawBot.png" alt="ClawBot" style="width: 44px; height: 44px; border-radius: 56px; box-shadow: var(--shadow-md);">
+        </div>
+        
+        
+        <p class="hero-subtitle">首个 HarmonyOS 原生 OpenClaw 多网关客户端<br>AI 对话 · 网关管理 · 隐私保护 · 梦境模式</p>
+        
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <span class="badge badge-blue">HarmonyOS 6.0+</span>
+            <span class="badge badge-purple">ArkTS + ArkUI</span>
+            <span class="badge badge-green">原生 APP</span>
+        </div>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">20+</div>
+                <div class="hero-stat-label">页面数量</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">30+</div>
+                <div class="hero-stat-label">组件数量</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">10</div>
+                <div class="hero-stat-label">服务数量</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">20K+</div>
+                <div class="hero-stat-label">代码行数</div>
+            </div>
+        </div>
+
+        <a href="javascript:void(0)" class="play-btn" onclick="openVideoModal()">
+            <span class="play-icon"></span>
+            观看演示视频
+        </a>
+    </section>
+
+    <!-- Tech Specs -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">技术规格</div>
+                <h2 class="section-title">创新方向使用</h2>
+                <p class="section-desc">本项目使用了 5 个鸿蒙开放能力或鸿蒙特性</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon blue">🔄</div>
+                    <div class="card-title">全场景一体协同</div>
+                    <div class="card-desc">FormCard 实时显示网关状态，支持手动刷新、定时刷新（30分钟）、网关状态变更自动刷新，跨进程数据同步，一键发送到桌面</div>
+                    <div class="card-tag">Form Kit</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon green">🔒</div>
+                    <div class="card-title">安全隐私保护</div>
+                    <div class="card-desc">图片安全选择、屏幕防窥检测、生物识别应用锁三重安全防护</div>
+                    <div class="card-tag">Media Library + Device Security + User Auth</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple">🤖</div>
+                    <div class="card-title">AI 原生体验</div>
+                    <div class="card-desc">实时 AI 对话、工具调用可视化、多模型切换、会话级模型配置、流式消息传输</div>
+                    <div class="card-tag">WebSocket + RPC</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">🎨</div>
+                    <div class="card-title">智能交互设计</div>
+                    <div class="card-desc">HdsNavDestination 原生导航、Sheet 底部表单、上下文菜单、3D 模型展示</div>
+                    <div class="card-tag">UIDesignKit + ArkUI</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon red">📊</div>
+                    <div class="card-title">数据可视化</div>
+                    <div class="card-desc">用量统计面板，展示 Token 消耗、成本分析、热门模型/工具/供应商排行</div>
+                    <div class="card-tag">自定义图表</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Features -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">核心功能</div>
+                <h2 class="section-title">创新功能点</h2>
+                <p class="section-desc">7 大核心功能，打造完整 AI 网关管理体验</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon blue">🌐</div>
+                    <div class="card-title">智能网关连接管理</div>
+                    <div class="card-desc">实现 OpenClaw 网关的无缝连接与管理，支持 WebSocket 实时通信、RPC 远程调用、Ed25519 签名认证、多网关切换、网关发现与配置</div>
+                    <div class="card-tag">WebSocket + RPC + Ed25519</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple">💬</div>
+                    <div class="card-title">AI 智能对话系统</div>
+                    <div class="card-desc">支持流式消息传输、实时工具调用展示、Markdown 渲染、特殊消息卡片、思考过程 UI 区分、会话级模型配置、命令系统</div>
+                    <div class="card-tag">Stream + Markdown + Tool Call</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon green">📈</div>
+                    <div class="card-title">AI 用量统计面板</div>
+                    <div class="card-desc">可视化展示 AI 使用数据，包括每日 Token 消耗、成本趋势、热门模型/工具/供应商排行、用量分析与预测</div>
+                    <div class="card-tag">Charts + Analytics</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">📱</div>
+                    <div class="card-title">桌面服务卡片</div>
+                    <div class="card-desc">实现跨进程数据共享的桌面服务卡片，显示网关状态、支持手动刷新、定时刷新（30分钟）、网关状态变更自动刷新、一键发送到桌面</div>
+                    <div class="card-tag">Form Kit + Cross-Process</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon red">🛡️</div>
+                    <div class="card-title">隐私与安全保护</div>
+                    <div class="card-desc">AI 防窥保护、生物识别应用锁、Ed25519 设备身份认证、安全图库选择，三重安全防护体系</div>
+                    <div class="card-tag">Anti-Peep + Biometric + Security</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon blue">📋</div>
+                    <div class="card-title">会话管理系统</div>
+                    <div class="card-desc">支持会话创建、重命名、删除、切换，自动选择默认会话，支持会话级模型配置，会话历史管理</div>
+                    <div class="card-tag">Session + History</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple">🎮</div>
+                    <div class="card-title">Claw 高级配置</div>
+                    <div class="card-desc">支持 Claw 技能管理、定时任务配置、模型列表管理、频道管理、高级设置与自定义配置</div>
+                    <div class="card-tag">Skills + Cron + Config</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Dreaming Mode -->
+    <section class="section" id="dreaming">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">全新功能</div>
+                <h2 class="section-title">梦境模式</h2>
+                <p class="section-desc">移动端首个实现 AI 梦境记忆处理的客户端</p>
+            </div>
+
+            <div class="dreaming-highlight">
+                <h3>🌙 AI 记忆梦境处理系统</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    实现 AI 记忆梦境处理系统，包含浅梦（Light）、深梦（Deep）、REM 梦境三个阶段，自动进行记忆去重、洞察提取、模式识别。可视化展示梦境状态、各阶段运行情况、短期记忆条目、梦境日记内容。
+                </p>
+                <div class="phase-tags">
+                    <span class="phase-tag light">🌤️ 浅梦 Light</span>
+                    <span class="phase-tag deep">🌊 深梦 Deep</span>
+                    <span class="phase-tag rem">💭 REM 梦境</span>
+                </div>
+            </div>
+
+            <div class="cards-grid" style="margin-top: 32px;">
+                <div class="card">
+                    <div class="card-title">记忆去重</div>
+                    <div class="card-desc">自动识别并合并重复的记忆条目，优化存储空间</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">洞察提取</div>
+                    <div class="card-desc">从对话历史中提取关键洞察，形成结构化知识</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">模式识别</div>
+                    <div class="card-desc">识别用户行为模式和偏好，提供更智能的服务</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Comparison -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">对比分析</div>
+                <h2 class="section-title">与同类产品的差异化优势</h2>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>功能</th>
+                            <th>iClaw</th>
+                            <th>其他同类产品</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AI 防窥保护</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td>生物识别应用锁</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td>FormCard</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td>用量统计面板</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td>工具调用可视化</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td>梦境模式</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 不支持</td>
+                        </tr>
+                        <tr>
+                            <td>多模型切换</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="partial">⚠️ 部分支持</td>
+                        </tr>
+                        <tr>
+                            <td>流式消息传输</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="partial">⚠️ 部分支持</td>
+                        </tr>
+                        <tr>
+                            <td>跨平台网关管理</td>
+                            <td class="check">✅ 支持</td>
+                            <td class="cross">❌ 仅 Web</td>
+                        </tr>
+                        <tr>
+                            <td>HarmonyOS 原生</td>
+                            <td class="check">✅ 是</td>
+                            <td class="cross">❌ 否</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Architecture -->
+    <section class="section" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">技术架构</div>
+                <h2 class="section-title">架构概览</h2>
+                <p class="section-desc">MVVM 架构模式，视图与逻辑分离</p>
+            </div>
+
+            <div class="architecture">
+                <div class="arch-layer ui">
+                    <strong style="color: var(--accent-primary);">UI 层 (22 页面)</strong><br>
+                    HomePage | ChatPage | SessionsPage | UsagePage | MePage | DreamingPage | SearchPage | SettingsPage | WidgetPreviewPage
+                </div>
+                <div class="arch-layer component">
+                    <strong style="color: var(--accent-purple);">组件层 (13 组件)</strong><br>
+                    MessageBubble | ToolCardView | GatewaySheet | ClawModel3D | ChatBubble | Card | SpecialCards | SessionItemCard
+                </div>
+                <div class="arch-layer service">
+                    <strong style="color: var(--accent-green);">服务层 (10 服务)</strong><br>
+                    GatewayService | ChatStreamService | AntiPeepService | RpcService | WebSocketService | GatewayApiService | WidgetDataService
+                </div>
+                <div class="arch-layer store">
+                    <strong style="color: var(--accent-orange);">状态管理层</strong><br>
+                    SessionStore | ChatStore | AppStorage | Preferences
+                </div>
+                <div class="arch-layer util">
+                    <strong style="color: var(--accent-red);">工具层</strong><br>
+                    ToolDisplay | ToastUtil | Theme | DeviceIdentityUtil | ChatCommands
+                </div>
+            </div>
+
+            <div style="margin-top: 32px;">
+                <h3 style="margin-bottom: 16px;">技术集成方案</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>ArkUI 声明式 UI</strong> - 全页面 UI 开发</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>UIDesignKit 导航</strong> - 原生页面导航与路由</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>服务卡片</strong> - FormCard，支持手动/定时/自动刷新</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>跨进程通信</strong> - Widget 与 App 数据共享</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>WebSocket</strong> - 网关连接、实时通信</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>RPC 远程调用</strong> - 网关 API 调用</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>Ed25519 签名</strong> - 设备身份认证</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>设备安全</strong> - AI 防窥保护</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>用户认证</strong> - 生物识别应用锁</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>安全图库</strong> - 图片选择与上传</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>Preferences</strong> - 本地数据持久化</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>AppStorage</strong> - 应用级状态管理</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span class="feature-text"><strong>Ark 3D 模型</strong> - GLB 模型互动展示</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Screenshots -->
+    <section class="section" id="screenshots">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">应用截图</div>
+                <h2 class="section-title">界面预览</h2>
+                <p class="section-desc">iClaw 核心页面展示</p>
+            </div>
+
+            <div class="screenshots-grid">
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/home.jpg" alt="首页" style="width: 100%; display: block;">
+                    <div class="screenshot-label">首页</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/chat.jpg" alt="AI 对话" style="width: 100%; display: block;">
+                    <div class="screenshot-label">AI 对话</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/chat-model-select.jpg" alt="模型选择" style="width: 100%; display: block;">
+                    <div class="screenshot-label">模型选择</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/sessions.jpg" alt="会话管理" style="width: 100%; display: block;">
+                    <div class="screenshot-label">会话管理</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/model-usage.jpg" alt="用量统计" style="width: 100%; display: block;">
+                    <div class="screenshot-label">用量统计</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/claw-dreaming.jpg" alt="梦境模式" style="width: 100%; display: block;">
+                    <div class="screenshot-label">梦境模式</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/home-widget-form-card.jpg" alt="FormCard" style="width: 100%; display: block;">
+                    <div class="screenshot-label">FormCard</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/form-cards-preview.jpg" alt="服务卡片预览" style="width: 100%; display: block;">
+                    <div class="screenshot-label">服务卡片预览</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/connect-help.jpg" alt="网关连接" style="width: 100%; display: block;">
+                    <div class="screenshot-label">网关连接</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/gateway-manage.jpg" alt="网关管理" style="width: 100%; display: block;">
+                    <div class="screenshot-label">网关管理</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/dicover-gateway.jpg" alt="发现网关" style="width: 100%; display: block;">
+                    <div class="screenshot-label">发现网关</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/channel-list.jpg" alt="频道管理" style="width: 100%; display: block;">
+                    <div class="screenshot-label">频道管理</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/cron-list.jpg" alt="定时任务" style="width: 100%; display: block;">
+                    <div class="screenshot-label">定时任务</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/model-list.jpg" alt="模型列表" style="width: 100%; display: block;">
+                    <div class="screenshot-label">模型列表</div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="assets/screenshots/settings.jpg" alt="高级设置" style="width: 100%; display: block;">
+                    <div class="screenshot-label">高级设置</div>
+                </div>
+            </div>
+
+            <!-- 暗色模式截图 -->
+            <div style="margin-top: 48px;">
+                <h3 style="margin-bottom: 24px;">暗色模式</h3>
+                <div class="screenshots-grid">
+                    <div class="screenshot-card">
+                        <img src="assets/screenshots/dark/home.jpg" alt="暗色模式 - 首页" style="width: 100%; display: block;">
+                        <div class="screenshot-label">首页</div>
+                    </div>
+                    <div class="screenshot-card">
+                        <img src="assets/screenshots/dark/chat.jpg" alt="暗色模式 - AI 对话" style="width: 100%; display: block;">
+                        <div class="screenshot-label">AI 对话</div>
+                    </div>
+                    <div class="screenshot-card">
+                        <img src="assets/screenshots/dark/sessions.jpg" alt="暗色模式 - 会话管理" style="width: 100%; display: block;">
+                        <div class="screenshot-label">会话管理</div>
+                    </div>
+                    <div class="screenshot-card">
+                        <img src="assets/screenshots/dark/discover.jpg" alt="暗色模式 - 发现页" style="width: 100%; display: block;">
+                        <div class="screenshot-label">发现页</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Video -->
+            <div id="demo-video" style="margin-top: 48px;">
+                <h3 style="margin-bottom: 16px;">演示视频</h3>
+                <div class="video-thumbnail" onclick="openVideoModal()">
+                    <img src="assets/screenshots/home.jpg" alt="演示视频封面">
+                    <div class="video-thumbnail-play"></div>
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 12px;">点击播放演示视频</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Project Structure -->
+    <section class="section" id="structure">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">项目结构</div>
+                <h2 class="section-title">代码组织</h2>
+                <p class="section-desc">清晰的模块化架构，便于维护与扩展</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon blue">📄</div>
+                    <div class="card-title">pages/ (22 页面)</div>
+                    <div class="card-desc">
+                        HomePage · ChatPage · SessionsPage · UsagePage · MePage · DreamingPage · SearchPage · SettingsPage · WidgetPreviewPage · ChannelsPage · ModelsPage · ClawSkillsPage · ClawCronPage · ClawConfigPage · AdvancedSettingsPage · MoreSettingsPage · OpenclawPage · GuidePage · FeedbackPage · ChangeLogPage · OpenSourcePage · Index
+                    </div>
+                    <div class="card-tag">页面层</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple">🧩</div>
+                    <div class="card-title">components/ (13 组件)</div>
+                    <div class="card-desc">
+                        GatewaySheet · MessageBubble · ToolCardView · ChatBubble · Card · SpecialCards · SessionItemCard · ClawModel3D · ConnectionGuideDialog · PairingDialog · Sheet · UISwitch · RoutePlaceholder
+                    </div>
+                    <div class="card-tag">组件层</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon green">⚙️</div>
+                    <div class="card-title">services/ (10 服务)</div>
+                    <div class="card-desc">
+                        GatewayService · ChatStreamService · WebSocketService · RpcService · GatewayApiService · AntiPeepService · WidgetDataService · NotificationService · GatewayConnectionService · ChatCommands
+                    </div>
+                    <div class="card-tag">服务层</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">📦</div>
+                    <div class="card-title">widget/ (服务卡片)</div>
+                    <div class="card-desc">
+                        IClawWidgetCard (卡片 UI) · IClawFormExtensionAbility (卡片能力) · WidgetDataService (数据服务)
+                    </div>
+                    <div class="card-tag">Form Kit</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Open Source -->
+    <section class="section" id="opensource">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">开源组件</div>
+                <h2 class="section-title">可开源共享的技术组件</h2>
+                <p class="section-desc">5 个核心组件，可独立开源复用</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon blue">🔐</div>
+                    <div class="card-title">GatewayAuthKit</div>
+                    <div class="card-desc">网关签名验证套件，实现 Ed25519 设备身份生成与管理，提供安全的认证流程</div>
+                    <div class="card-tag">安全连接</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple">📡</div>
+                    <div class="card-title">HarmonyRpcKit</div>
+                    <div class="card-desc">基于 WebSocket 的 RPC 通信框架，支持请求/响应、事件订阅、自动重连</div>
+                    <div class="card-tag">通信框架</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon green">🔄</div>
+                    <div class="card-title">WidgetSyncKit</div>
+                    <div class="card-desc">跨进程 Widget 数据同步方案，使用 Preferences 实现实时状态更新</div>
+                    <div class="card-tag">数据同步</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon orange">⚡</div>
+                    <div class="card-title">StreamKit</div>
+                    <div class="card-desc">流式消息处理框架，支持打字机效果渲染、工具事件解析、调用卡片展示</div>
+                    <div class="card-tag">流式处理</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon red">🛡️</div>
+                    <div class="card-title">PrivacyKit</div>
+                    <div class="card-desc">隐私保护套件，集成 AI 防窥、生物识别应用锁、自动隐藏敏感内容</div>
+                    <div class="card-tag">隐私保护</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Use Cases -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">使用场景</div>
+                <h2 class="section-title">具体使用场景</h2>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-title">👨‍💻 开发者远程管理 AI 网关</div>
+                    <div class="card-desc">外出时通过手机快速连接 OpenClaw 网关，查看网关状态、模型用量、会话列表，执行代码操作、文件管理、系统监控</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🔧 系统管理员监控网关健康</div>
+                    <div class="card-desc">通过桌面 FormCard 实时查看网关连接状态，快速诊断问题，执行重启、配置更新等操作</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📊 AI 研究者分析用量成本</div>
+                    <div class="card-desc">通过用量统计面板查看每日 Token 消耗和成本趋势，按模型和供应商筛选数据，优化使用策略</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🔒 隐私敏感场景使用</div>
+                    <div class="card-desc">在公共场所使用 AI 对话时，防窥保护自动检测周围环境，他人靠近时自动隐藏聊天内容</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🌐 多网关同时管理</div>
+                    <div class="card-desc">手机端核心优势：支持同时管理多个 OpenClaw 网关，一键切换、独立配置、状态同步，轻松应对多环境多项目场景</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📱 移动端随时 AI 对话</div>
+                    <div class="card-desc">在手机上随时随地与 AI 对话，支持流式消息、工具调用可视化、会话管理，移动端体验不输桌面端</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🌙 AI 梦境记忆处理</div>
+                    <div class="card-desc">利用空闲时间自动进行 AI 记忆梦境处理，浅梦去重、深梦洞察、REM 模式识别，让 AI 越用越懂你</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🎮 Claw 技能与定时任务</div>
+                    <div class="card-desc">在手机上管理 Claw 技能、配置定时任务、管理模型列表和频道，完整覆盖 OpenClaw 网关运维需求</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p style="margin-bottom: 16px;">
+            <strong style="color: var(--text-primary);">iClaw</strong> - HarmonyOS 原生 OpenClaw 多网关客户端
+        </p>
+        <p>
+            文档版本: v2.2 | 最后更新: 2026-05-07 | 作者: winter
+        </p>
+        <p style="margin-top: 8px; color: var(--text-secondary);">
+            22 页面 · 13 组件 · 10 服务 · 20K+ 代码行数
+        </p>
+        <p style="margin-top: 16px;">
+            <a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ability-arkts" target="_blank">HarmonyOS SDK 文档</a> · 
+            <a href="https://developer.huawei.com/consumer/cn/doc/harmonyos-references/ui-design-arkts-component" target="_blank">ArkUI 组件文档</a> · 
+            <a href="https://docs.openclaw.ai/gateway" target="_blank">OpenClaw 文档</a>
+        </p>
+    </footer>
+
+    <!-- Video Modal -->
+    <div class="video-modal-overlay" id="videoModal" onclick="closeVideoModal()">
+        <div class="video-modal-content" onclick="event.stopPropagation()">
+            <button class="video-modal-close" onclick="closeVideoModal()">✕</button>
+            <video id="modalVideo" controls preload="metadata" style="max-height: 90vh; width: auto; border-radius: 16px;">
+                <source src="assets/preview.mp4" type="video/mp4">
+                您的浏览器不支持视频播放
+            </video>
+        </div>
+    </div>
+
+    <script>
+        function openVideoModal() {
+            var modal = document.getElementById('videoModal');
+            var video = document.getElementById('modalVideo');
+            modal.classList.add('active');
+            video.play();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoModal() {
+            var modal = document.getElementById('videoModal');
+            var video = document.getElementById('modalVideo');
+            modal.classList.remove('active');
+            video.pause();
+            video.currentTime = 0;
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+    </script>
+</body>
+</html>
