@@ -2,6 +2,8 @@
 
 [2026 HarmonyOS创新赛·极客赛道](https://developer.huawei.com/consumer/cn/activity/digixActivity/digixcmsdetail/101773710117484023)
 
+[iClaw-Landpage](https://2winter-dev.github.io/iClaw-2026-HarmonyOS-Innovation-Competition-Geek-Track/)
+
 ## 项目基本信息
 
 | 项目 | 信息 |
